@@ -1,6 +1,8 @@
 package eu.mgmeiner.lottozahlenapi.source
 
 import eu.mgmeiner.lottozahlenapi.config.LottozahlenAPIConfigProps
+import eu.mgmeiner.lottozahlenapi.lottozahlen.Lotto6Aus49Document
+import eu.mgmeiner.lottozahlenapi.lottozahlen.LottozahlenDocument
 import org.springframework.http.MediaType
 import org.springframework.stereotype.Service
 import org.springframework.web.reactive.function.client.WebClient
@@ -10,9 +12,9 @@ import java.time.format.DateTimeFormatter
 import javax.xml.parsers.DocumentBuilderFactory
 
 @Service
-class WestlottoLottozahlenSource (private val configProps: LottozahlenAPIConfigProps) : LottozahlenSource {
+class WestlottoLottozahlenSource(private val configProps: LottozahlenAPIConfigProps) : LottozahlenSource {
 
-    override fun getCurrentLottozahlen(): Mono<LottozahlenSourceModel> = WebClient
+    override fun getCurrentLottozahlen(): Mono<LottozahlenDocument> = WebClient
             .create(configProps.westlottoRSSFeedUrl)
             .get()
             .accept(MediaType.APPLICATION_XML)
@@ -20,7 +22,7 @@ class WestlottoLottozahlenSource (private val configProps: LottozahlenAPIConfigP
             .bodyToMono(String::class.java)
             .map { parseXml(it) }
 
-    fun parseXml(xml: String): LottozahlenSourceModel {
+    fun parseXml(xml: String): LottozahlenDocument {
         val xmlDoc = DocumentBuilderFactory.newInstance().newDocumentBuilder().parse(xml.byteInputStream())
 
         xmlDoc.normalizeDocument()
@@ -46,13 +48,14 @@ class WestlottoLottozahlenSource (private val configProps: LottozahlenAPIConfigP
         )
     }
 
-    fun createLottozahlenSourceModelFromRawValues(lotto6Aus49Raw: String, lottoSpiel77Raw: String, lottoSuper6Raw: String) = LottozahlenSourceModel(
+    fun createLottozahlenSourceModelFromRawValues(lotto6Aus49Raw: String, lottoSpiel77Raw: String, lottoSuper6Raw: String) = LottozahlenDocument(
             date = getDateFromRawString(lotto6Aus49Raw),
-            super6 = getSuper6NumbersFromRawString(lottoSuper6Raw),
-            spiel77 = getSpiel77NumbersFromRawString(lottoSpiel77Raw),
-            lottozahlen6aus49SourceModel = Lottozahlen6aus49SourceModel(
-                    get6Aus49NumbersFromRawString(lotto6Aus49Raw),
-                    getSuperzahlFromRawString(lotto6Aus49Raw))
+            super6Zahlen = getSuper6NumbersFromRawString(lottoSuper6Raw),
+            spiel77Zahlen = getSpiel77NumbersFromRawString(lottoSpiel77Raw),
+            lotto6Aus49Document = Lotto6Aus49Document(
+                    superzahl = getSuperzahlFromRawString(lotto6Aus49Raw),
+                    zahlen = get6Aus49NumbersFromRawString(lotto6Aus49Raw)
+            )
     )
 
     fun getSuper6NumbersFromRawString(lottoSuper6Raw: String) =
