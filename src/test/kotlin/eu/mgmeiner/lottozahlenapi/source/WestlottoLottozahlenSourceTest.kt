@@ -5,6 +5,7 @@ import eu.mgmeiner.lottozahlenapi.config.LottozahlenAPIConfigProps
 import org.junit.jupiter.api.Assertions.assertThrows
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
+import java.nio.charset.Charset
 import java.time.LocalDate
 
 class WestlottoLottozahlenSourceTest {
@@ -14,6 +15,20 @@ class WestlottoLottozahlenSourceTest {
     @BeforeEach
     fun setUp() {
         westlottoLottozahlenSource = WestlottoLottozahlenSource(LottozahlenAPIConfigProps())
+    }
+
+    @Test
+    fun `test that parseXml() parses the westlotto valid-result xml correctly`() {
+        val xml = javaClass.getResourceAsStream("/westlotto/valid-result.xml").readAllBytes().toString(Charset.forName("UTF-8"))
+
+        val result = westlottoLottozahlenSource.parseXml(xml)
+
+        result.date.should.be.equal(LocalDate.of(2018, 6, 9))
+        result.super6.should.be.equal(listOf(8, 2, 6, 4, 1, 8))
+        result.spiel77.should.be.equal(listOf(3, 2, 1, 4, 7, 3, 3))
+
+        result.lottozahlen6aus49SourceModel.superzahl.should.be.equal(9)
+        result.lottozahlen6aus49SourceModel.zahlen.should.be.equal(listOf(13, 16, 34, 35, 39, 42))
     }
 
     @Test

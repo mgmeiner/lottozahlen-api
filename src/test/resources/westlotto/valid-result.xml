@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="ISO-8859-15"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+	<channel>
+		<title>LOTTO 6aus49 Gewinnzahlen</title>
+		<link>http://ergebnisse.westlotto.de/gewinnzahlen/lottozahlen.rss</link>
+		<atom:link href="http://ergebnisse.westlotto.de/gewinnzahlen/lottozahlen.rss" rel="self" type="application/rss+xml"/>
+		<description>Aktuelle LOTTO 6aus49 Gewinnzahlen</description>
+		<item>
+			<title>vom 09.06.18: 13, 16, 34, 35, 39, 42 S: 9</title>
+			<description/>
+			<link>http://www.westlotto.de/gewinnzahlen/lottozahlen.html?feed=yes</link>
+			<guid isPermaLink="false">wlinfo-frss-lotto-2018-06-09</guid>
+		</item>
+		<item>
+			<title>Spiel 77: 3214733</title>
+			<description/>
+			<link>http://www.westlotto.de/gewinnzahlen/lottozahlen.html?feed=yes</link>
+			<guid isPermaLink="false">wlinfo-frss-spiel77-2018-06-09</guid>
+		</item>
+		<item>
+			<title>SUPER 6: 826418</title>
+			<description/>
+			<link>http://www.westlotto.de/gewinnzahlen/lottozahlen.html?feed=yes</link>
+			<guid isPermaLink="false">wlinfo-frss-super6-2018-06-09</guid>
+		</item>
+		<item>
+			<title>Alle Angaben ohne Gewähr</title>
+			<description/>
+			<link>http://www.westlotto.de/gewinnzahlen/lottozahlen.html?feed=yes</link>
+			<guid isPermaLink="false">wlinfo-frss-lotto-ohne-gewaehr</guid>
+		</item>
+	</channel>
+</rss>
