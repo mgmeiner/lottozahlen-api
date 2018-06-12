@@ -1,6 +1,7 @@
 package eu.mgmeiner.lottozahlenapi.source
 
 import com.winterbe.expekt.should
+import eu.mgmeiner.lottozahlenapi.config.LottozahlenAPIConfigProps
 import org.junit.jupiter.api.Assertions.assertThrows
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
@@ -12,15 +13,15 @@ class WestlottoLottozahlenSourceTest {
 
     @BeforeEach
     fun setUp() {
-        westlottoLottozahlenSource = WestlottoLottozahlenSource()
+        westlottoLottozahlenSource = WestlottoLottozahlenSource(LottozahlenAPIConfigProps())
     }
 
     @Test
     fun `test that createLottozahlenSourceModelFromRawValues() returs LottozahlenSourceModel correct`() {
         val result = westlottoLottozahlenSource.createLottozahlenSourceModelFromRawValues(
-                "Super 6: 123456",
+                "vom 12.06.18: 8, 9, 10, 11, 12, 13 S: 6",
                 "Spiel77: 1234567",
-                "vom 12.06.18: 8, 9, 10, 11, 12, 13 S: 6")
+                "Super 6: 123456")
 
         result.date.should.be.equal(LocalDate.of(2018, 6, 12))
         result.super6.should.be.equal(listOf(1, 2, 3, 4, 5, 6))
