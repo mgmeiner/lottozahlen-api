@@ -1,8 +1,8 @@
 package eu.mgmeiner.lottozahlenapi.source
 
-import eu.mgmeiner.lottozahlenapi.lottozahlen.LottozahlenDocument
+import eu.mgmeiner.lottozahlenapi.lottozahlen.LottozahlenModel
 import reactor.core.publisher.Mono
 
 interface LottozahlenSource {
-    fun getCurrentLottozahlen(): Mono<LottozahlenDocument>
+    fun getCurrentLottozahlen(): Mono<LottozahlenModel>
 }
