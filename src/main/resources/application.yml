@@ -9,6 +9,10 @@ spring:
 
 lottozahlen-api:
   westlottoRssFeedUrl: http://www.ergebnisse.westlotto.de/gewinnzahlen/lottozahlen.rss
+  autoUpdate:
+    enabled: true
+    cronSchedule: '0 * * * * *'
+
 
 logging:
   level:
