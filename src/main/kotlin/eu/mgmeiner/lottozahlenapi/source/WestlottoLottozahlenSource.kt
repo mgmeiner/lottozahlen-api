@@ -50,9 +50,9 @@ class WestlottoLottozahlenSource(private val configProps: LottozahlenAPIConfigPr
 
     fun createLottozahlenSourceModelFromRawValues(lotto6Aus49Raw: String, lottoSpiel77Raw: String, lottoSuper6Raw: String) = LottozahlenDocument(
             date = getDateFromRawString(lotto6Aus49Raw),
-            super6Zahlen = getSuper6NumbersFromRawString(lottoSuper6Raw),
-            spiel77Zahlen = getSpiel77NumbersFromRawString(lottoSpiel77Raw),
-            lotto6Aus49Document = Lotto6Aus49Document(
+            super6 = getSuper6NumbersFromRawString(lottoSuper6Raw),
+            spiel77 = getSpiel77NumbersFromRawString(lottoSpiel77Raw),
+            lotto6Aus49 = Lotto6Aus49Document(
                     superzahl = getSuperzahlFromRawString(lotto6Aus49Raw),
                     zahlen = get6Aus49NumbersFromRawString(lotto6Aus49Raw)
             )
@@ -62,13 +62,13 @@ class WestlottoLottozahlenSource(private val configProps: LottozahlenAPIConfigPr
             ("\\d{6}".toRegex()
                     .find(lottoSuper6Raw)?.value
                     ?: throw LottozahlenSourceException("No 'Super6 Zahlen' in $lottoSuper6Raw"))
-                    .split("").filter { it.isNotEmpty() }.map { it.toInt() }
+                    .toInt()
 
     fun getSpiel77NumbersFromRawString(lottoSpiel77Raw: String) =
             ("\\d{7}".toRegex()
                     .find(lottoSpiel77Raw)?.value
                     ?: throw LottozahlenSourceException("No 'Spiel77 Zahlen' in $lottoSpiel77Raw"))
-                    .split("").filter { it.isNotEmpty() }.map { it.toInt() }
+                    .toInt()
 
     fun getDateFromRawString(lotto6Aus49Raw: String): LocalDate =
             LocalDate.parse(
