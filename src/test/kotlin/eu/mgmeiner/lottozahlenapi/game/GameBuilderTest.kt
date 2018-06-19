@@ -12,13 +12,15 @@ class GameBuilderTest {
                 .with6Aus49Ziehung2(listOf(7, 8, 9, 10, 11, 12), 3, 4)
                 .withSpiel77(77)
                 .withSuper6(6)
+                .with7Aus38(listOf(1, 2, 3, 4, 6, 7), 123456)
                 .build()
 
-        games.should.have.size(4)
+        games.should.have.size(5)
 
         games.should.contain(Pair(LottoGameType.LOTTO6AUS49, Lotto6Aus49Game(listOf(1, 2, 3, 4, 5, 6), 1, 2)))
         games.should.contain(Pair(LottoGameType.LOTTO6AUS49_ZIEHUNG2, Lotto6Aus49Game(listOf(7, 8, 9, 10, 11, 12), 3, 4)))
         games.should.contain(Pair(LottoGameType.LOTTOSPIEL77, LottoSpiel77Game(77)))
         games.should.contain(Pair(LottoGameType.LOTTOSUPER6, LottoSuper6Game(6)))
+        games.should.contain(Pair(LottoGameType.LOTTO7AUS38, Lotto7Aus38Game(listOf(1, 2, 3, 4, 6, 7), 123456)))
     }
 }

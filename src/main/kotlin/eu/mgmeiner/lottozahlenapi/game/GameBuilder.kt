@@ -19,6 +19,10 @@ class GameBuilder private constructor() {
         gameTypes[LottoGameType.LOTTO6AUS49_ZIEHUNG2] = Lotto6Aus49Game(nummern, superzahl, zusatzzahl)
     }
 
+    fun with7Aus38(nummern: List<Int>, zusatzzahl: Int) = also {
+        gameTypes[LottoGameType.LOTTO7AUS38] = Lotto7Aus38Game(nummern, zusatzzahl)
+    }
+
     fun build(): Map<LottoGameType, LottoGame> = gameTypes
 
     companion object {

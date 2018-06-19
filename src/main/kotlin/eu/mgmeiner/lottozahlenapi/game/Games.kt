@@ -8,6 +8,11 @@ data class Lotto6Aus49Game(
         val zusatzzahl: Int?
 ) : LottoGame
 
+data class Lotto7Aus38Game(
+        val zahlen: List<Int>,
+        val zusatzzahl: Int
+) : LottoGame
+
 data class LottoSpiel77Game(
         val nummer: Int
 ) : LottoGame
@@ -22,6 +27,9 @@ enum class LottoGameType {
     },
     LOTTO6AUS49_ZIEHUNG2 {
         override fun toString() = "lotto6Aus49Ziehung2"
+    },
+    LOTTO7AUS38 {
+        override fun toString() = "lotto7Aus38"
     },
     LOTTOSPIEL77 {
         override fun toString() = "lottoSpiel77"
