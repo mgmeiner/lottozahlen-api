@@ -6,11 +6,12 @@ spring:
     mongodb:
       host: localhost
       port: 27017
+      database: lotto
 
 lottozahlen-api:
-  westlottoRssFeedUrl: http://www.ergebnisse.westlotto.de/gewinnzahlen/lottozahlen.rss
+  westlottoRssFeedUrl: http://www.ergebnisse.westlotto.de/gewinnzahlen/draw.rss
   autoUpdate:
-    enabled: true
+    enabled: false
     cronSchedule: '0 * * * * *'
 
 

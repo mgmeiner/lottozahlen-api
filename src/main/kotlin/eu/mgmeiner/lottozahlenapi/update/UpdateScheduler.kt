@@ -1,7 +1,7 @@
 package eu.mgmeiner.lottozahlenapi.update
 
-import eu.mgmeiner.lottozahlenapi.lottozahlen.LottozahlenService
-import eu.mgmeiner.lottozahlenapi.source.LottozahlenSource
+import eu.mgmeiner.lottozahlenapi.draw.LottoDrawService
+import eu.mgmeiner.lottozahlenapi.source.LottoDrawSource
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty
@@ -11,17 +11,17 @@ import org.springframework.stereotype.Component
 @Component
 @ConditionalOnProperty(name = ["lottozahlen-api.autoUpdate.enabled"], havingValue = "true")
 class UpdateScheduler(
-        private val lottozahlenSource: LottozahlenSource,
-        private val lottozahlenService: LottozahlenService) {
+        private val lottoDrawSource: LottoDrawSource,
+        private val lottoDrawService: LottoDrawService) {
 
-    @Scheduled(cron = "\${lottozahlen-api.autoUpdate.cronSchedule}")
+    @Scheduled(cron = "\${draw-api.autoUpdate.cronSchedule}")
     fun updateLottozahlen() {
-        lottozahlenSource.getCurrentLottozahlen().flatMap {
-            lottozahlenService.save(it)
+        lottoDrawSource.getCurrentLottoDraw().flatMap {
+            lottoDrawService.save(it)
         }.subscribe({
-            log.debug("successfully retrieved new 'Lottozahlen'")
+            log.debug("successfully retrieved new lotto draw")
         }, {
-            log.error("error during getting and saving new 'Lottozahlen'", it)
+            log.error("error during getting and saving new lotto draw", it)
         })
     }
 

@@ -1,5 +1,7 @@
-package eu.mgmeiner.lottozahlenapi.lottozahlen.repo
+package eu.mgmeiner.lottozahlenapi.draw.repo
 
+import eu.mgmeiner.lottozahlenapi.game.LottoGame
+import eu.mgmeiner.lottozahlenapi.game.LottoGameType
 import org.bson.types.ObjectId
 import org.springframework.data.annotation.Id
 import org.springframework.data.mongodb.core.index.Indexed
@@ -7,24 +9,18 @@ import org.springframework.data.mongodb.core.mapping.Document
 import java.util.*
 
 /**
- * MongoDB Document for 'Lottozahlen'
+ * MongoDB Document for a Lotto draw
  *
  * Dates are stored in old fashioned @see java.util.Date because spring's LocalDateTime Converter makes use of the current timezone and not UTC.
  * <a href="https://jira.spring.io/browse/DATAMONGO-1026">Spring Issue</a>
  */
-@Document(collection = "lottozahlen")
-data class LottozahlenDocument (
+@Document(collection = "lottodraws")
+data class LottoDrawDocument(
         @Id
         val id: ObjectId? = null,
         @Indexed
         val date: Date,
         val saveDateTime: Date,
-        val spiel77: Int?,
-        val super6: Int?,
-        val lotto6Aus49: Lotto6Aus49Document
+        val games: Map<LottoGameType, LottoGame>
 )
 
-data class Lotto6Aus49Document(
-        val superzahl: Int?,
-        val zahlen: List<Int>
-)

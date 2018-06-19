@@ -1,8 +1,8 @@
 package eu.mgmeiner.lottozahlenapi.source
 
 import eu.mgmeiner.lottozahlenapi.config.LottozahlenAPIConfigProps
-import eu.mgmeiner.lottozahlenapi.lottozahlen.Lotto6Aus49Model
-import eu.mgmeiner.lottozahlenapi.lottozahlen.LottozahlenModel
+import eu.mgmeiner.lottozahlenapi.draw.LottoDrawModel
+import eu.mgmeiner.lottozahlenapi.game.GameBuilder
 import org.springframework.http.MediaType
 import org.springframework.stereotype.Service
 import org.springframework.web.reactive.function.client.WebClient
@@ -12,9 +12,9 @@ import java.time.format.DateTimeFormatter
 import javax.xml.parsers.DocumentBuilderFactory
 
 @Service
-class WestlottoLottozahlenSource(private val configProps: LottozahlenAPIConfigProps) : LottozahlenSource {
+class WestlottoLottoDrawSource(private val configProps: LottozahlenAPIConfigProps) : LottoDrawSource {
 
-    override fun getCurrentLottozahlen(): Mono<LottozahlenModel> = WebClient
+    override fun getCurrentLottoDraw(): Mono<LottoDrawModel> = WebClient
             .create(configProps.westlottoRSSFeedUrl)
             .get()
             .accept(MediaType.APPLICATION_XML)
@@ -22,7 +22,7 @@ class WestlottoLottozahlenSource(private val configProps: LottozahlenAPIConfigPr
             .bodyToMono(String::class.java)
             .map { parseXml(it) }
 
-    fun parseXml(xml: String): LottozahlenModel {
+    fun parseXml(xml: String): LottoDrawModel {
         val xmlDoc = DocumentBuilderFactory.newInstance().newDocumentBuilder().parse(xml.byteInputStream())
 
         xmlDoc.normalizeDocument()
@@ -38,7 +38,7 @@ class WestlottoLottozahlenSource(private val configProps: LottozahlenAPIConfigPr
                 }
             }
 
-            throw LottozahlenSourceException("no title element found in document on item with index  $itemIndex")
+            throw LottoDrawSourceException("no title element found in document on item with index  $itemIndex")
         }
 
         return createLottozahlenSourceModelFromRawValues(
@@ -48,42 +48,48 @@ class WestlottoLottozahlenSource(private val configProps: LottozahlenAPIConfigPr
         )
     }
 
-    fun createLottozahlenSourceModelFromRawValues(lotto6Aus49Raw: String, lottoSpiel77Raw: String, lottoSuper6Raw: String) = LottozahlenModel(
-            date = getDateFromRawString(lotto6Aus49Raw),
-            super6 = getSuper6NumbersFromRawString(lottoSuper6Raw),
-            spiel77 = getSpiel77NumbersFromRawString(lottoSpiel77Raw),
-            lotto6Aus49 = Lotto6Aus49Model(
-                    superzahl = getSuperzahlFromRawString(lotto6Aus49Raw),
-                    zahlen = get6Aus49NumbersFromRawString(lotto6Aus49Raw)
-            )
-    )
+    fun createLottozahlenSourceModelFromRawValues(lotto6Aus49Raw: String, lottoSpiel77Raw: String, lottoSuper6Raw: String): LottoDrawModel {
+        val gameBuilder = GameBuilder.create()
+
+        val games = gameBuilder
+                .withSuper6(getSuper6NumbersFromRawString(lottoSuper6Raw))
+                .withSpiel77(getSpiel77NumbersFromRawString(lottoSpiel77Raw))
+                .with6Aus49(get6Aus49NumbersFromRawString(lotto6Aus49Raw), getSuperzahlFromRawString(lotto6Aus49Raw))
+                .build()
+
+        return LottoDrawModel(
+                date = getDateFromRawString(lotto6Aus49Raw),
+                games = games
+        )
+    }
+
 
     fun getSuper6NumbersFromRawString(lottoSuper6Raw: String) =
             ("\\d{6}".toRegex()
                     .find(lottoSuper6Raw)?.value
-                    ?: throw LottozahlenSourceException("No 'Super6 Zahlen' in $lottoSuper6Raw"))
+                    ?: throw LottoDrawSourceException("No 'Super6 Zahlen' in $lottoSuper6Raw"))
                     .toInt()
 
     fun getSpiel77NumbersFromRawString(lottoSpiel77Raw: String) =
             ("\\d{7}".toRegex()
                     .find(lottoSpiel77Raw)?.value
-                    ?: throw LottozahlenSourceException("No 'Spiel77 Zahlen' in $lottoSpiel77Raw"))
+                    ?: throw LottoDrawSourceException("No 'Spiel77 Zahlen' in $lottoSpiel77Raw"))
                     .toInt()
 
     fun getDateFromRawString(lotto6Aus49Raw: String): LocalDate =
             LocalDate.parse(
                     "\\d{2}\\.\\d{2}\\.\\d{2}".toRegex().find(lotto6Aus49Raw)?.value
-                            ?: throw LottozahlenSourceException("No Date found in $lotto6Aus49Raw"),
+                            ?: throw LottoDrawSourceException("No Date found in $lotto6Aus49Raw"),
                     DateTimeFormatter.ofPattern("dd.MM.yy")
             )
 
     fun getSuperzahlFromRawString(lotto6Aus49Raw: String) =
             ("(S:\\s)(\\d)".toRegex().find(lotto6Aus49Raw)
-                    ?: throw LottozahlenSourceException("No 'Superzahl' found in $lotto6Aus49Raw")).groupValues[2].toInt()
+                    ?: throw LottoDrawSourceException("No 'Superzahl' found in $lotto6Aus49Raw")).groupValues[2].toInt()
 
     fun get6Aus49NumbersFromRawString(lotto6Aus49Raw: String): List<Int> {
         val lotto6Aus49OnlyNumbersRaw = "\\d*, \\d*, \\d*, \\d*, \\d*, \\d*".toRegex().find(lotto6Aus49Raw)?.value
-                ?: throw LottozahlenSourceException("No '6 aus 49 Zahlen' in $lotto6Aus49Raw")
+                ?: throw LottoDrawSourceException("No '6 aus 49 Zahlen' in $lotto6Aus49Raw")
 
         return "\\d+".toRegex().findAll(lotto6Aus49OnlyNumbersRaw).map { it.value.toInt() }.toList()
     }

@@ -10,7 +10,7 @@ import org.springframework.context.annotation.Configuration;
  * Also IntelliJ seems to have problems to provide autocompletion for the properties when using a Kotlin-Class.
  */
 @Configuration
-@ConfigurationProperties("lottozahlen-api")
+@ConfigurationProperties("draw-api")
 public class LottozahlenAPIConfigProps {
     private String westlottoRSSFeedUrl;
     private UpdateSchedulingConfigProps autoUpdate;
