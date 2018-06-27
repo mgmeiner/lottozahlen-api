@@ -4,9 +4,9 @@ server:
 spring:
   data:
     mongodb:
-      host: localhost
-      port: 27017
-      database: lotto
+       host: localhost
+       port: 27017
+       database: lotto
 
 lottozahlen-api:
   westlottoRssFeedUrl: http://www.ergebnisse.westlotto.de/gewinnzahlen/draw.rss
@@ -14,7 +14,3 @@ lottozahlen-api:
     enabled: false
     cronSchedule: '0 * * * * *'
 
-
-logging:
-  level:
-    org.springframework.data.mongodb.core.ReactiveMongoTemplate: DEBUG
